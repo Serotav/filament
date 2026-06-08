@@ -16,6 +16,7 @@
 
 #include "details/Material.h"
 
+#include "DynamicSpecConstKey.h"
 #include "FilamentAPI-impl.h"
 #include "Froxelizer.h"
 #include "MaterialParser.h"
@@ -33,17 +34,15 @@
 #include <filament/Material.h>
 #include <filament/MaterialEnums.h>
 
-#if FILAMENT_ENABLE_MATDBG
-#include <matdbg/DebugServer.h>
-#endif
-
-#include <filaflat/ChunkContainer.h>
-
 #include <backend/CallbackHandler.h>
 #include <backend/DriverApiForward.h>
 #include <backend/DriverEnums.h>
 #include <backend/Program.h>
 
+#include <filaflat/ChunkContainer.h>
+#if FILAMENT_ENABLE_MATDBG
+#include <matdbg/DebugServer.h>
+#endif
 #include <utils/BitmaskEnum.h>
 #include <utils/compiler.h>
 #include <utils/CString.h>
@@ -264,7 +263,9 @@ void FMaterial::compile(CompilerPriorityQueue const priority,
     if (UTILS_LIKELY(isParallelShaderCompileSupported)) {
         for (auto const variant : variants) {
             if (mDefinition.hasVariant(variant, shaderModel, isStereoSupported)) {
-                mi->prepareProgram(driver, variant, priority);
+                for (auto const specKey : DynamicSpecConstKey::getAllPossibleKeys()) {
+                    mi->prepareProgram(driver, variant, specKey, priority);
+                }
             }
         }
     }
@@ -483,7 +484,7 @@ FixedCapacityVector<Program::SpecializationConstant> FMaterial::processSpecializ
                         << types[value.index()] << " was provided.";
                 break;
         }
-        uint32_t const index = pos->second + CONFIG_MAX_RESERVED_SPEC_CONSTANTS;
+        uint32_t const index = pos->second + CONFIG_MAX_INTERNAL_SPEC_CONSTANTS;
         specializationConstants[index] = value;
     }
     return specializationConstants;
