@@ -35,7 +35,6 @@
 #include <backend/DriverEnums.h>
 #include <backend/Handle.h>
 
-#include <math/scalar.h>
 #include <utils/BitmaskEnum.h>
 #include <utils/compiler.h>
 #include <utils/CString.h>
@@ -43,6 +42,8 @@
 #include <utils/Logger.h>
 #include <utils/ostream.h>
 #include <utils/Panic.h>
+
+#include <math/scalar.h>
 
 #include <algorithm>
 #include <cmath>

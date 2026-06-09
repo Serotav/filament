@@ -34,15 +34,17 @@
 #include <filament/Material.h>
 #include <filament/MaterialEnums.h>
 
+#if FILAMENT_ENABLE_MATDBG
+#include <matdbg/DebugServer.h>
+#endif
+
+#include <filaflat/ChunkContainer.h>
+
 #include <backend/CallbackHandler.h>
 #include <backend/DriverApiForward.h>
 #include <backend/DriverEnums.h>
 #include <backend/Program.h>
 
-#include <filaflat/ChunkContainer.h>
-#if FILAMENT_ENABLE_MATDBG
-#include <matdbg/DebugServer.h>
-#endif
 #include <utils/BitmaskEnum.h>
 #include <utils/compiler.h>
 #include <utils/CString.h>
