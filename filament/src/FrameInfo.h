@@ -303,6 +303,15 @@ public:
     utils::FixedCapacityVector<Renderer::FrameInfo>
             getFrameInfoHistory(size_t historySize = MAX_FRAMETIME_HISTORY) const;
 
+    /*
+     * Exposes the user frame history directly as a Slice without copying.
+     * The returned Slice remains valid until the next call to updateUserHistory()
+     * or until this FrameInfoManager is destroyed.
+     */
+    utils::Slice<const Renderer::FrameInfo> getFrameInfoHistorySlice() const noexcept {
+        return mUserFrameHistory;
+    }
+
 private:
     using FrameHistoryQueue = CircularQueue<FrameInfoImpl, MAX_FRAMETIME_HISTORY>;
     static void denoiseFrameTime(FrameHistoryQueue& history, Config const& config) noexcept;
